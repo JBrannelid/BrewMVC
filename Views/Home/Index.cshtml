@@ -1,0 +1,55 @@
+﻿@model List<BrewMVC.ViewModels.PopularMenuItemVM>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<main class="container">
+    <h1 class="custom-heading mb-4 mt-4">
+        Our Most Loved Dishes
+    </h1>
+
+
+    @* Display max 2 popular item per slide *@    
+<div id="popularMenuItemsCarousel" class="carousel slide" data-bs-ride="false"> @* "false" = auto slide carousel on*@
+        <div class="carousel-inner">
+            @for (int i = 0; i < Model.Count; i += 2)
+            {
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <div class="row text-center justify-content-center">
+                        @foreach (var menuItem in Model.Skip(i).Take(2))
+                        {
+                            <div class="col-md-6 mb-3">
+                                <img src="@menuItem.ImageUrl"
+                                     alt="Picture of @menuItem.Description"
+                                     class="img-fluid rounded mb-2"
+                                     style="width:350px; height:350px; object-fit:cover;" />
+                                <div class="fw-normal text-center mx-auto" style="max-width:300px;">
+                                    <p class="custom-p">@menuItem.Description</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        @* Left Button *@    
+<button class="carousel-control-prev custom-carousel-btn" type="button" data-bs-target="#popularMenuItemsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+
+        <button class="carousel-control-next custom-carousel-btn" type="button" data-bs-target="#popularMenuItemsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+
+    </div>
+
+    <div class="mt-2 text-center">
+        <a asp-controller="MenuItem" asp-action="Index" class="btn">
+           Full Menu
+        </a>
+    </div>
+</main>
+
