@@ -3,13 +3,13 @@
 @* Display max 2 popular item per slide until we have populate DB with more menu items*@    
 <div id="popularMenuItemsCarousel" class="carousel slide" data-bs-ride="false"> @* "false" = auto slide carousel on*@
     <div class="carousel-inner">
-        @for (int i = 0; i < Model.Count; i += 2)
+        @for (int i = 0; i < Model.Count; i += 4)
         {
             <div class="carousel-item @(i == 0 ? "active" : "")">
                 <div class="row text-center justify-content-center">
-                    @foreach (var menuItem in Model.Skip(i).Take(2))
+                    @foreach (var menuItem in Model.Skip(i).Take(4))
                     {
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-2 mb-3">
                             <img src="@menuItem.ImageUrl"
                                  alt="Picture of @menuItem.Description"
                                  class="img-fluid rounded mb-2"
