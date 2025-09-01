@@ -39,3 +39,14 @@ namespace BrewMVC
         }
     }
 }
+
+
+// Referense page:
+// https://jarsofdust.com/
+// https://se.pinterest.com/pin/coffee-shop-landing-page-design-in-2024--356488126771592941/
+
+// Color picker: 
+// https://rgbcolorpicker.com/
+
+// CSS
+// https://getbootstrap.com/docs/5.3/getting-started/introduction/
