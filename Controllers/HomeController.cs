@@ -19,8 +19,8 @@ namespace BrewMVC.Controllers
         public async Task<IActionResult> Index()
         {
             var response = await _client.GetAsync("MenuItems");
-            var menuItems = await response.Content.ReadFromJsonAsync<List<Models.MenuItems>>();
-            var vm = menuItems
+            var menuItems = await response.Content.ReadFromJsonAsync<List<MenuItems>>();
+            var popularMenuItemVM = menuItems
                 .Where(m => m.IsPopular)
                 .Select(m => new PopularMenuItemVM
                 {
@@ -28,7 +28,7 @@ namespace BrewMVC.Controllers
                     ImageUrl = m.ImageUrl
                 }).ToList();
 
-            return View(vm);
+            return View(popularMenuItemVM);
         }
 
         public IActionResult Privacy()
