@@ -28,14 +28,24 @@ body {
 }
 
 .custom-heading {
-    color: #787064; 
-    font-family: 'Playfair Display', serif; 
-    font-weight: 700; 
-    text-align: center; 
+    color: #787064;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    text-align: center;
+    font-size: 2em;
+}
+
+.custom-h2 {
+    color: #787064;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.5em;
 }
 
 .custom-p {
-    color: #787064; 
+    color: #787064;
+    font-size: 1em;
 }
 
 /* Buttons */
