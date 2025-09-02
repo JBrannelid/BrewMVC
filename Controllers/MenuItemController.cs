@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BrewMVC.Models;
+using BrewMVC.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BrewMVC.Controllers
 {
@@ -14,8 +16,14 @@ namespace BrewMVC.Controllers
         {
             var response = await _client.GetAsync("MenuItems");
             var menuItems = await response.Content.ReadFromJsonAsync<List<Models.MenuItems>>();
+            var categoryMenuItemVM = new CategoryMenuItemVM();
 
-            return View(menuItems);
+            // Group menu items by category
+            categoryMenuItemVM.MenuByCategory = menuItems
+                .GroupBy(item => item.Category ?? "Other")
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            return View(categoryMenuItemVM);
         }
     }
 }
