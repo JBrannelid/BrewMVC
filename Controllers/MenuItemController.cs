@@ -1,5 +1,5 @@
 ﻿using BrewMVC.Models;
-using BrewMVC.ViewModel;
+using BrewMVC.ViewModel.MenuItems;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BrewMVC.Controllers
@@ -8,22 +8,23 @@ namespace BrewMVC.Controllers
     {
         private readonly HttpClient _client;
 
-        public MenuItemController(IHttpClientFactory clientFactory)
-        {
+        public MenuItemController(IHttpClientFactory clientFactory) =>
             _client = clientFactory.CreateClient("BrewAPI");
-        }
+
         public async Task<IActionResult> Index()
         {
-            var response = await _client.GetAsync("MenuItems");
-            var menuItems = await response.Content.ReadFromJsonAsync<List<Models.MenuItems>>();
-            var categoryMenuItemVM = new CategoryMenuItemVM();
+            var menuItems = await _client.GetFromJsonAsync<List<MenuItemModel>>("MenuItems");
 
-            // Group menu items by category
-            categoryMenuItemVM.MenuByCategory = menuItems
-                .GroupBy(item => item.Category ?? "Other")
-                .ToDictionary(g => g.Key, g => g.ToList());
+            var categoryMenuItem = new CategoryMenuItemVM
+            {
+                MenuByCategory = menuItems?
+                    .GroupBy(item => item.Category ?? "Other")
+                    .ToDictionary(g => g.Key, g => g.ToList())
+                    // FailSafe: Return an empty dictionary if no items are found
+                    ?? new Dictionary<string, List<MenuItemModel>>()
+            };
 
-            return View(categoryMenuItemVM);
+            return View(categoryMenuItem);
         }
     }
 }
