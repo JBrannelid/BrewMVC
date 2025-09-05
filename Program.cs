@@ -1,3 +1,5 @@
+using BrewMVC.Extensions;
+
 namespace BrewMVC
 {
     public class Program
@@ -6,17 +8,14 @@ namespace BrewMVC
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
-            builder.Services.AddHttpClient("BrewAPI", client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:7136/api/");
-            });
+            // Add services using extension methods
+            builder.Services.AddMvcServices();
+            builder.Services.AddHttpClients(builder.Configuration);
+            builder.Services.AddAuthenticationAndAuthorization();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure the HTTP request pipeline
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -26,27 +25,19 @@ namespace BrewMVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
+            // Enable Authentication & Authorization
+            app.UseAuthentication();
             app.UseAuthorization();
 
+            // Configure routing
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+            // Run the application
             app.Run();
         }
     }
 }
-
-
-// Referense page:
-// https://jarsofdust.com/
-// https://se.pinterest.com/pin/coffee-shop-landing-page-design-in-2024--356488126771592941/
-
-// Color picker: 
-// https://rgbcolorpicker.com/
-
-// CSS
-// https://getbootstrap.com/docs/5.3/getting-started/introduction/
