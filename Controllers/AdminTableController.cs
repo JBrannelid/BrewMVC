@@ -42,6 +42,7 @@ namespace BrewMVC.Controllers
             }
             catch (Exception ex)
             {
+                ModelState.AddModelError(key: "", $"An error occurred\"{ex.Message}");
                 return View(model: new List<AdminTableVM>());
             }
         }
@@ -75,7 +76,7 @@ namespace BrewMVC.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"An error occurred\"{ex.Message}");
+                ModelState.AddModelError(key: "", $"An error occurred\"{ex.Message}");
                 return View(newTable);
             }
         }
