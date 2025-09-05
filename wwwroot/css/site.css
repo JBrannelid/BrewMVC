@@ -22,11 +22,17 @@ body {
     background-color: #e3e0d8
 }
 
-/* Text */
+/* Background Header */
 .main-header {
     background-color: #aa866e;
 }
 
+.table-custom-header {
+    background-color: #9c9990;
+    color: white;
+}
+
+/* Text */
 .custom-heading {
     color: #787064;
     font-family: 'Playfair Display', serif;
