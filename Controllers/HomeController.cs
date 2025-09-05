@@ -18,19 +18,20 @@ namespace BrewMVC.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var menuItems = await _client.GetFromJsonAsync<List<MenuItemModel>>("MenuItems") 
-                    ?? new List<MenuItemModel>();
+            try
+            {
+                // Use the dedicated popular endpoint for better performance
+                var popularMenuItems = await _client.GetFromJsonAsync<List<PopularMenuItemVM>>("MenuItems/popular")
+                        ?? new List<PopularMenuItemVM>();
 
-            var popularMenuItems = menuItems
-                .Where(m => m.IsPopular)
-                .Select(m => new PopularMenuItemVM
-                {
-                    Description = m.Description,
-                    ImageUrl = m.ImageUrl
-                })
-                .ToList();
+                return View(popularMenuItems);
 
-            return View(popularMenuItems);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(key: "", $"An error occurred\"{ex.Message}");
+                return View(new List<PopularMenuItemVM>());
+            }
         }
 
         public IActionResult Privacy()
