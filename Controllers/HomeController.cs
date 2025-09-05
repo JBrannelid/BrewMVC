@@ -1,5 +1,6 @@
 using BrewMVC.Models;
-using BrewMVC.ViewModels;
+using BrewMVC.ViewModel.MenuItems;
+using BrewMVC.ViewModel.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,20 +16,21 @@ namespace BrewMVC.Controllers
             _client = clientFactory.CreateClient("BrewAPI");
             _logger = logger;
         }
-
         public async Task<IActionResult> Index()
         {
-            var response = await _client.GetAsync("MenuItems");
-            var menuItems = await response.Content.ReadFromJsonAsync<List<MenuItems>>();
-            var popularMenuItemVM = menuItems
+            var menuItems = await _client.GetFromJsonAsync<List<MenuItemModel>>("MenuItems") 
+                    ?? new List<MenuItemModel>();
+
+            var popularMenuItems = menuItems
                 .Where(m => m.IsPopular)
                 .Select(m => new PopularMenuItemVM
                 {
                     Description = m.Description,
                     ImageUrl = m.ImageUrl
-                }).ToList();
+                })
+                .ToList();
 
-            return View(popularMenuItemVM);
+            return View(popularMenuItems);
         }
 
         public IActionResult Privacy()
