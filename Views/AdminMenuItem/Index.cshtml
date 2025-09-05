@@ -1,0 +1,87 @@
+﻿@model List<BrewMVC.ViewModel.MenuItems.MenuItemListVM>
+
+@{
+    ViewData["Title"] = "Menu administration";
+}
+
+<main class="container mt-4">
+    <header class="d-flex justify-content-between align-items-center mb-4 mt-4">
+        <h1 class="fw-bold custom-heading">Administrate Menu Items</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create New Item
+        </a>
+    </header>
+
+        <section aria-labelledby="menu-items-heading">
+
+        @if (Model?.Any() == true)
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle"
+                       aria-label="Menu items administration table">
+                    <thead class="table-custom-header text-white table-borderless">
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Popular</th>
+                        @* Blank space for header *@
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@item.ImageUrl"
+                                     alt="Menu item image of @item.Name"
+                                     class="img-thumbnail"
+                                     style="width: 100px; height: 100px; object-fit: cover;" />
+                            </td>
+                            <td>@item.Name</td>
+                            <td>@item.Category</td>
+                            <td>@item.Price.ToString("C")</td>
+                            <td>@item.Description</td>
+                            <td>
+                                @if (item.IsPopular)
+                                {
+                                    <span class="badge bg-warning text-black ">Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">No</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.MenuItemId" class="btn btn-warning btn-sm me-2">
+                                    <i class="bi bi-pencil-square me-1"></i>Edit
+                                </a>
+                            </td>
+                            <td class="text-end">
+                                <form asp-action="Delete" method="post" class="d-inline"
+                                      onsubmit="return confirm('Are you sure you want to delete Menu Item @item.Name?')">
+                                    <input type="hidden" name="menuItemId" value="@item.MenuItemId" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash me-1"></i>Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">
+                <h4>No Menu Items were found</h4>
+                <p>There are currently no Menu Items in the system</p>
+            </div>
+        }
+    </section>
+</main>
