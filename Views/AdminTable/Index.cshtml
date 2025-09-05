@@ -1,0 +1,62 @@
+﻿@model List<BrewMVC.ViewModel.Tabels.AdminTableVM>
+
+@{
+    ViewData["Title"] = "Table administration";
+}
+
+<main class="container mt-4">
+    <header class="d-flex justify-content-between align-items-center mb-4 mt-4">
+        <h1 class="custom-heading mb-0">Administrate Tables</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i>Create New Table
+        </a>
+    </header>
+
+    <section aria-labelledby="menu-items-heading">
+
+        @if (Model?.Any() == true)
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle"
+                       aria-label="Table administration table">
+                    <thead class="table-custom-header text-white table-borderless">
+                        <tr>
+                            <th>Table Number</th>
+                            <th>Capacity</th>
+                            @* Blank space for header *@
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var table in Model)
+                        {
+                            <tr>
+                                <td><strong>Table @table.TableNumber</strong></td>
+                                <td>@table.Capacity guests</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@table.TableId" class="btn btn-warning btn-sm me-2">
+                                        <i class="bi bi-pencil-square me-1"></i>Edit
+                                    </a>
+                                    <form asp-action="Delete" method="post" class="d-inline"
+                                            onsubmit="return confirm('Are you sure you want to delete Table @table.TableNumber?')">
+                                        <input type="hidden" name="tableId" value="@table.TableId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash me-1"></i>Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">
+                <h4>No Tables were found</h4>
+                <p>There are currently no Tables in the system.</p>
+            </div>
+        }
+    </section>
+</main>

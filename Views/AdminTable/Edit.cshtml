@@ -1,0 +1,43 @@
+﻿@model BrewMVC.ViewModel.Tabels.EditTableVM
+@{
+    ViewData["Title"] = "Edit Table";
+}
+
+<main class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <article class="card mt-4">
+                <header class="card-header">
+                    <h1 class="custom-heading mb-0">Edit Table @Model.TableNumber</h1>
+                </header>
+                <section class="card-body">
+                    <form asp-action="Edit" method="post" aria-labelledby="edit-table-heading">
+                        <input type="hidden" asp-for="TableId" />
+
+                        <div class="mb-3">
+                            <label asp-for="TableNumber" class="form-label"></label>
+                            <input asp-for="TableNumber" class="form-control" aria-describedby="tableNumber-help" />
+                            <span asp-validation-for="TableNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Capacity" class="form-label"></label>
+                            <input asp-for="Capacity" class="form-control" type="number" min="1" max="8" aria-describedby="capacity-help" />
+                            <span asp-validation-for="Capacity" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary" aria-label="Return to tables list">
+                                <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Tables
+                            </a>
+                            <button type="submit" class="btn btn-primary" aria-label="Save changes to table @Model.TableNumber">
+                                <i class="bi bi-check-circle me-1" aria-hidden="true"></i>Update Table
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </article>
+        </div>
+    </div>
+</main>
+
