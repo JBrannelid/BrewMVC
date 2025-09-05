@@ -57,7 +57,7 @@ namespace BrewMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(MenuItemListVM newMenuItem)
+        public async Task<IActionResult> Create(CreateMenuItemVM newMenuItem)
         {
             SetAuthorizationHeader();
 
@@ -97,7 +97,7 @@ namespace BrewMVC.Controllers
                     return NotFound();
                 }
 
-                var menuItemContent = await response.Content.ReadFromJsonAsync<MenuItemListVM>();
+                var menuItemContent = await response.Content.ReadFromJsonAsync<UpdateMenuItemVM>();
                 if (menuItemContent == null)
                 {
                     return NotFound();
@@ -113,22 +113,22 @@ namespace BrewMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, MenuItemListVM menuItemList)
+        public async Task<IActionResult> Edit(int id, UpdateMenuItemVM updateMenuItem)
         {
             SetAuthorizationHeader();
 
             if (!ModelState.IsValid)
             {
-                return View(menuItemList);
+                return View(updateMenuItem);
             }
 
             try
             {
-                var response = await _client.PutAsJsonAsync($"MenuItems/{id}", menuItemList);
+                var response = await _client.PutAsJsonAsync($"MenuItems/{id}", updateMenuItem);
                 if (!response.IsSuccessStatusCode)
                 {
                     ModelState.AddModelError("", "Failed to update menu item");
-                    return View(menuItemList);
+                    return View(updateMenuItem);
                 }
 
                 return RedirectToAction("Index");
@@ -137,7 +137,7 @@ namespace BrewMVC.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", $"An error occurred: {ex.Message}");
-                return View(menuItemList);
+                return View(updateMenuItem);
             }
         }
 
