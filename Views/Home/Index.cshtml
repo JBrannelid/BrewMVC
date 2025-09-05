@@ -1,19 +1,25 @@
-﻿@model List<BrewMVC.ViewModels.PopularMenuItemVM>
+﻿@using BrewMVC.ViewModel.MenuItems
+@model List<PopularMenuItemVM>
 @{
     ViewData["Title"] = "Home";
 }
 
 <main class="container">
-    <h1 class="custom-heading mb-4 mt-4">
-        Our Most Loved Dishes
-    </h1>
+    <header class="mb-4 mt-4">
+        <h1 class="custom-heading">
+            Our Most Loved Dishes
+        </h1>
+    </header>
 
-    @await Html.PartialAsync("_PopularMenuCarousel", Model)
+    <section aria-labelledby="popular-dishes-heading">
+        @* Using PartialAsync to render the popular menu carousel. Easier to work with collections *@
+        @await Html.PartialAsync("_PopularMenuCarousel", Model)
+    </section>
 
-    <div class="mt-2 text-center">
-        <a asp-controller="MenuItem" asp-action="Index" class="btn">
-           Full Menu
+    <!-- Navigation to full menu -->
+    <div class="mt-2 text-center" aria-label="Menu navigation">
+        <a asp-controller="MenuItem" asp-action="Index" class="btn" role="button">
+            Full Menu
         </a>
     </div>
 </main>
-
