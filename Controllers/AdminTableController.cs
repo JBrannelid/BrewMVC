@@ -1,8 +1,6 @@
-﻿using BrewMVC.ViewModel.MenuItems;
-using BrewMVC.ViewModel.Tabels;
+﻿using BrewMVC.ViewModel.Tabels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Headers;
 
 namespace BrewMVC.Controllers
 {
@@ -15,21 +13,9 @@ namespace BrewMVC.Controllers
         {
             _client = clientFactory.CreateClient("BrewAPI");
         }
-
-        // Function to add JWT-token for auth API request 
-        private void SetAuthorizationHeader()
-        {
-            var token = HttpContext.Request.Cookies["jwtToken"];
-            if (!string.IsNullOrEmpty(token))
-            {
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }
-        }
         
         public async Task<IActionResult> Index()
         {
-            SetAuthorizationHeader();
-
             try
             {
                 var response = await _client.GetAsync("Tables");
@@ -56,8 +42,6 @@ namespace BrewMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateTableVM newTable)
         {
-            SetAuthorizationHeader();
-
             if (!ModelState.IsValid)
             {
                 return View(newTable);
@@ -84,8 +68,6 @@ namespace BrewMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            SetAuthorizationHeader();
-
             try
             {
                 var response = await _client.GetAsync($"Tables/{id}");
@@ -111,8 +93,6 @@ namespace BrewMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditTableVM editTable)
         {
-            SetAuthorizationHeader();
-
             if (!ModelState.IsValid)
             {
                 return View(editTable);
@@ -141,8 +121,6 @@ namespace BrewMVC.Controllers
         {
             // TempData for errors on Delete since we redirect to Index
             // ModelState is lost on redirect but TempData persists for one reques
-
-            SetAuthorizationHeader();
 
             try
             {
