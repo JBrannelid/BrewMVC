@@ -1,0 +1,71 @@
+﻿@using BrewMVC.ViewModel.Bookings
+@model CreateBookingVM
+@{
+    ViewData["Title"] = "Create New Booking";
+}
+
+<main class="container">
+    <header class="mb-4 mt-4">
+        <h1 class="custom-heading">Create New Booking</h1>
+    </header>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Create" method="post" role="form" aria-labelledby="create-booking-heading">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="CustomerId" class="form-label"></label>
+                            <input asp-for="CustomerId" class="form-control" type="number" min="1" aria-describedby="customer-help" />
+                            <div class="form-text">Enter the Customer ID</div>
+                            <span asp-validation-for="CustomerId" class="text-danger" role="alert" aria-live="polite"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TableId" class="form-label"></label>
+                            <input asp-for="TableId" class="form-control" type="number" min="1" aria-describedby="table-help" />
+                            <div class="form-text">Enter the Table number</div>
+                            <span asp-validation-for="TableId" class="text-danger" role="alert" aria-live="polite"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="BookingDate" class="form-label"></label>
+                            <input asp-for="BookingDate" class="form-control" type="date" />
+                            <span asp-validation-for="BookingDate" class="text-danger" role="alert" aria-live="polite"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="BookingTime" class="form-label"></label>
+                            <input asp-for="BookingTime" class="form-control" type="time" />
+                            <span asp-validation-for="BookingTime" class="text-danger" role="alert" aria-live="polite"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NumberGuests" class="form-label"></label>
+                            <input asp-for="NumberGuests" class="form-control" type="number" min="1" max="8" />
+                            <span asp-validation-for="NumberGuests" class="text-danger" role="alert" aria-live="polite"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label"></label>
+                            <select asp-for="Status" class="form-control">
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Cancelled">Cancelled</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger" role="alert" aria-live="polite"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end" aria-label="Form actions">
+                            <a asp-action="Index" class="btn btn-secondary me-2" role="button">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Create Booking</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
