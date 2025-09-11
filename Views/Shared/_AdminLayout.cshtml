@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="~/BrewMVC.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="main-header bg-dark text-white">
+    <header class="main-header bg-dark text-white admin-header">
         <!-- NavBar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-transparent container-fluid">
             <!-- Hamburger menu button -->
@@ -19,71 +19,78 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Mobile close button -->
+                <div class="d-lg-none d-flex justify-content-end mb-3">
+                    <button type="button" class="btn btn-link text-white" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Close menu">
+                        <i class="bi bi-x-lg fs-4"></i>
+                    </button>
+                </div>
+
                 <div class="d-lg-flex w-100 align-items-center">
                     <!-- Left -->
-                    <div class="flex-fill">
-                        <ul class="navbar-nav align-items-center flex-row flex-wrap justify-content-start">
-                            <li class="nav-item me-3">
-                                <a class="nav-link text-white fs-5" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <!-- Public Pages dropdown -->
-                            <li class="nav-item dropdown fs-5 me-3">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Pages
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
-                                    <li><a class="dropdown-item" asp-controller="MenuItem" asp-action="Index">Menu</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Booking" asp-action="Index">Booking</a></li>
-                                </ul>
-                            </li>
-                            @* Admin nav menu - conditional rendering *@
+                    <ul class="navbar-nav align-items-center flex-row flex-wrap justify-content-start flex-fill">
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white fs-5" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <!-- Public Pages dropdown -->
+                        <li class="nav-item dropdown fs-5 me-3">
+                            <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                Pages
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                                <li><a class="dropdown-item" asp-controller="MenuItem" asp-action="Index">Menu</a></li>
+                                <li><a class="dropdown-item" asp-controller="Booking" asp-action="Index">Booking</a></li>
+                            </ul>
+                        </li>
+                        @* Admin nav menu - conditional rendering *@
+                        @if (User?.Identity?.IsAuthenticated == true)
+                        {
+                            var userRole = User.FindFirst("role")?.Value;
+                            if (userRole == "Admin" || userRole == "Manager")
+                            {
+                                <li class="nav-item dropdown fs-5 me-3">
+                                    <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Administration
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-controller="AdminBooking" asp-action="Index">Administrate Bookings</a></li>
+                                        <li><a class="dropdown-item" asp-controller="AdminMenuItem" asp-action="Index">Administrate Menu Items</a></li>
+                                        <li><a class="dropdown-item" asp-controller="AdminTable" asp-action="Index">Administrate Tables</a></li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        <!-- User info (mobile) -->
+                        <li class="nav-item d-lg-none">
                             @if (User?.Identity?.IsAuthenticated == true)
                             {
-                                var userRole = User.FindFirst("role")?.Value;
-                                if (userRole == "Admin" || userRole == "Manager")
-                                {
-                                    <li class="nav-item dropdown fs-5 me-3">
-                                        <a class="nav-link dropdown-toggle text-white" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Administration
-                                        </a>
-                                        <!-- Admin Pages dropdown -->
-                                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                            <li><a class="dropdown-item" asp-controller="AdminBooking" asp-action="Index">Administrate Bookings</a></li>
-                                            <li><a class="dropdown-item" asp-controller="AdminMenuItem" asp-action="Index">Administrate Menu Items</a></li>
-                                            <li><a class="dropdown-item" asp-controller="AdminTable" asp-action="Index">Administrate Tables</a></li>
-                                        </ul>
-                                    </li>
-                                }
+                                <span class="navbar-text text-white fs-6">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    @User.FindFirst("unique_name").Value | @User.FindFirst("role").Value
+                                </span>
                             }
-                            <!-- User info (mobile) -->
-                            <li class="nav-item d-lg-none">
-                                @if (User?.Identity?.IsAuthenticated == true)
-                                {
-                                    <span class="navbar-text text-white fs-6 me-3">
-                                        @User.FindFirst("unique_name").Value | @User.FindFirst("role").Value
-                                    </span>
-                                }
+                            <div class="mt-3">
                                 @{
                                     var hasJwt = Context.Request.Cookies.ContainsKey("jwtToken");
                                 }
                                 @if (hasJwt)
                                 {
-                                    <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline" aria-label="Logout">
-                                        <button type="submit" class="btn btn-link btn-user" title="Logout">
-                                            <i class="bi bi-box-arrow-right"></i>
+                                    <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-light btn-sm">
+                                            <i class="bi bi-box-arrow-right me-2"></i>Logout
                                         </button>
                                     </form>
                                 }
                                 else
                                 {
-                                    <a asp-controller="Auth" asp-action="Login" class="btn-user" aria-label="Login">
-                                        <i class="bi bi-person-circle me-1"></i>
+                                    <a asp-controller="Auth" asp-action="Login" class="btn btn-outline-light btn-sm">
+                                        <i class="bi bi-person-circle me-2"></i>Login
                                     </a>
                                 }
-                            </li>
-                        </ul>
-                    </div>
+                            </div>
+                        </li>
+                    </ul>
 
                     <!-- Middle (Desktop) -->
                     <div class="text-center d-none d-lg-block">
@@ -95,18 +102,15 @@
                     <div class="flex-fill d-flex justify-content-end align-items-center d-none d-lg-flex">
                         @if (User?.Identity?.IsAuthenticated == true)
                         {
-                            <div class="m-2 text-white fs-5" role="status" aria-label="Current user account">
-                                <span aria-label="Logged in as">@User.FindFirst("unique_name").Value</span>
-                                <span aria-hidden="true"> | </span>
-                                <span aria-label="Current role">@User.FindFirst("role").Value</span>
+                            <div class="m-2 text-white fs-5">
+                                <span>@User.FindFirst("unique_name").Value</span>
+                                <span> | </span>
+                                <span>@User.FindFirst("role").Value</span>
                             </div>
                         }
-                        @{
-                            var hasJwt2 = Context.Request.Cookies.ContainsKey("jwtToken");
-                        }
-                        @if (hasJwt2)
+                        @if (hasJwt)
                         {
-                            <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline" aria-label="Logout">
+                            <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-link btn-user ms-3" title="Logout">
                                     <i class="bi bi-box-arrow-right"></i>
                                 </button>
@@ -114,7 +118,7 @@
                         }
                         else
                         {
-                            <a asp-controller="Auth" asp-action="Login" class=" btn-user ms-3" aria-label="Login">
+                            <a asp-controller="Auth" asp-action="Login" class="btn-user ms-3" title="Login">
                                 <i class="bi bi-person-circle me-1"></i>
                             </a>
                         }
@@ -123,8 +127,8 @@
             </div>
         </nav>
     </header>
-    <div class="container ">
-        <main role="main" class="pb-3">
+    <div class="container">
+        <main class="pb-3">
             <!-- Alert Banner Partial View -->
             @await Html.PartialAsync("_AlertBanner")
             <!-- Render Views -->
@@ -143,11 +147,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-@* Custom view hight for Admin pages  *@
-<style>
-    /* Background Header */
-    .main-header {
-        min-height: 25vh;
-    }
-</style>
