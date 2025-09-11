@@ -1,49 +1,56 @@
 ﻿@using BrewMVC.ViewModel
 @using BrewMVC.ViewModel.MenuItems
-@using System.Text.RegularExpressions
 @model CategoryMenuItemVM
 @{
     ViewData["Title"] = "Menu";
 }
 
-<main class="container">
-    <header class="mb-4 mt-4">
-        <h1 class="custom-heading">Our Menu</h1>
+<div class="container">
+    <!-- Menu Header -->
+    <header class="my-4 py-4 text-center bg-white rounded-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="custom-heading mb-4">Our Complete Menu</h1>
+                <p class="custom-p fs-5">
+                    Every item on our menu is prepared with care, finest ingredients and sustainable choices
+                </p>
+            </div>
+        </div>
     </header>
 
-    @foreach (var category in Model.MenuByCategory)
+    @foreach (var category in Model.CategoryOrder.Where(c => Model.MenuByCategory.ContainsKey(c)))
     {
-        // Generate a safe HTML ID for category
-        string categoryId = Regex.Replace(category.Key.Trim().ToLower().Replace(" ", "-"), @"[^a-z0-9\-]", "");
-
         <!-- Menu category section -->
-        <section class="mb-5" aria-labelledby="category-@categoryId">
-            <header class="mb-4">
-                <h2 class="custom-h2" id="category-@categoryId">@category.Key</h2>
-            </header>
+        <section class="my-4 py-4 bg-white rounded-3">
+            <div class="px-4">
+                <header class="text-center mb-5">
+                    <h2 class="custom-heading">@category</h2>
+                    <div class="spacer"></div>
+                </header>
 
-            <div class="row">
-                @foreach (var item in category.Value)
-                {
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <!-- Individual menu item -->
-                        <article class="card h-100">
-                            <img src="@item.ImageUrl"
-                                 class="card-img-top"
-                                 style="height:300px; object-fit:cover;"
-                                 alt="Image of @item.Name" />
-                            <div class="card-body d-flex flex-column">
-                                <h3 class="visually-hidden">@item.Name</h3>
-                                <p class="card-text flex-grow-1">@item.Description</p>
-                                <p class="card-text fw-bold" 
-                                   aria-label="Price: @item.Price.ToString("C")">
-                                   @item.Price.ToString("C")
-                                </p>
-                            </div>
-                        </article>
-                    </div>
-                }
+                <div class="row g-5">
+                    @foreach (var item in Model.MenuByCategory[category])
+                    {
+                        <div class="col-lg-3">
+                            <!-- Menu item section -->
+                            <article class="card border-0 shadow-sm h-100">
+                                <a asp-controller="MenuItem" asp-action="Details" asp-route-id="@item.MenuItemId"
+                                   class="text-decoration-none">
+                                        <!-- Menu img -->
+                                        <img src="@item.ImageUrl"
+                                             class="card-img-top"
+                                             style="height: 180px; object-fit: cover;"
+                                             alt="Image of menu item: @item.Name" />
+                                    <!-- Menu Title -->
+                                    <div class="card-body text-center">
+                                        <h3 class="card-title custom-h3 mb-2">@item.Name</h3>
+                                    </div>
+                                </a>
+                            </article>
+                        </div>
+                    }
+                </div>
             </div>
         </section>
     }
-</main>
+</div>

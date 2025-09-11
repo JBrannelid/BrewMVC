@@ -2,10 +2,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+// Error handling: Helper methods for TempData.
+// ModelState is lost on redirect but TempData persists for one http reques
+// Same View() errors: ModelState since we return View()
+// Redirect errors: TempData since we return RedirectToActio
+
 namespace BrewMVC.Controllers
 {
     [Authorize]
-    public class AdminMenuItemController : Controller
+    public class AdminMenuItemController : BaseController
     {
         private readonly HttpClient _client;
         public AdminMenuItemController(IHttpClientFactory clientFactory)
@@ -21,6 +26,7 @@ namespace BrewMVC.Controllers
                 var response = await _client.GetAsync("MenuItems");
                 if (!response.IsSuccessStatusCode)
                 {
+                    HandleApiError(response, "Failed to load menu items");
                     return View(new List<MenuItemListVM>());
                 }
 
@@ -32,6 +38,7 @@ namespace BrewMVC.Controllers
             }
             catch (Exception)
             {
+                ModelState.AddModelError("", "An error occurred while loading menu items");
                 return View(new List<MenuItemListVM>());
             }
         }
@@ -55,15 +62,16 @@ namespace BrewMVC.Controllers
                 var response = await _client.PostAsJsonAsync("MenuItems", newMenuItem);
                 if (!response.IsSuccessStatusCode)
                 {
-                    ModelState.AddModelError("", "Failed to create menu item");
+                    HandleApiError(response, "Failed to create menu item");
                     return View(newMenuItem);
                 }
 
+                SetSuccessMessage("Menu item created successfully");
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError("", $"An error occurred\"{ex.Message}");
+                ModelState.AddModelError("", "An error occurred while creating the menu item");
                 return View(newMenuItem);
             }
         }
@@ -76,20 +84,22 @@ namespace BrewMVC.Controllers
                 var response = await _client.GetAsync($"MenuItems/{id}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    return NotFound();
+                    HandleApiErrorWithTempData(response, "Menu item not found");
+                    return RedirectToAction("Index");
                 }
 
                 var menuItemContent = await response.Content.ReadFromJsonAsync<UpdateMenuItemVM>();
                 if (menuItemContent == null)
                 {
-                    return NotFound();
+                    SetErrorMessage("Menu item not found");
+                    return RedirectToAction("Index");
                 }
 
                 return View(menuItemContent);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError("", $"An error occurred\"{ex.Message}");
+                SetErrorMessage("An error occurred while loading the menu item");
                 return NotFound();
             }
         }
@@ -107,16 +117,16 @@ namespace BrewMVC.Controllers
                 var response = await _client.PutAsJsonAsync($"MenuItems/{id}", updateMenuItem);
                 if (!response.IsSuccessStatusCode)
                 {
-                    ModelState.AddModelError("", "Failed to update menu item");
+                    HandleApiError(response, "Failed to update menu item");
                     return View(updateMenuItem);
                 }
 
+                SetSuccessMessage("Menu item updated successfully");
                 return RedirectToAction("Index");
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError("", $"An error occurred: {ex.Message}");
+                ModelState.AddModelError("", "An error occurred while updating the menu item");
                 return View(updateMenuItem);
             }
         }
@@ -124,24 +134,21 @@ namespace BrewMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int menuItemId)
         {
-            // TempData for errors on Delete since we redirect to Index
-            // ModelState is lost on redirect but TempData persists for one reques
-
             try
             {
                 var response = await _client.DeleteAsync($"MenuItems/{menuItemId}");
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    TempData["ErrorMessage"] = "Failed to delete table";
+                    HandleApiErrorWithTempData(response, "Failed to delete menu item");
                     return RedirectToAction("Index");
                 }
 
-                TempData["SuccessMessage"] = "Table deleted successfully";
+                SetSuccessMessage("Menu item deleted successfully");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                SetErrorMessage("An error occurred while deleting the menu item");
             }
 
             return RedirectToAction("Index");

@@ -2,70 +2,111 @@
 @model CreateBookingVM
 @{
     ViewData["Title"] = "Create New Booking";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<main class="container">
-    <header class="mb-4 mt-4">
-        <h1 class="custom-heading">Create New Booking</h1>
-    </header>
-
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <form asp-action="Create" method="post" role="form" aria-labelledby="create-booking-heading">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                        <div class="mb-3">
-                            <label asp-for="CustomerId" class="form-label"></label>
-                            <input asp-for="CustomerId" class="form-control" type="number" min="1" aria-describedby="customer-help" />
-                            <div class="form-text">Enter the Customer ID</div>
-                            <span asp-validation-for="CustomerId" class="text-danger" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="TableId" class="form-label"></label>
-                            <input asp-for="TableId" class="form-control" type="number" min="1" aria-describedby="table-help" />
-                            <div class="form-text">Enter the Table number</div>
-                            <span asp-validation-for="TableId" class="text-danger" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="BookingDate" class="form-label"></label>
-                            <input asp-for="BookingDate" class="form-control" type="date" />
-                            <span asp-validation-for="BookingDate" class="text-danger" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="BookingTime" class="form-label"></label>
-                            <input asp-for="BookingTime" class="form-control" type="time" />
-                            <span asp-validation-for="BookingTime" class="text-danger" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="NumberGuests" class="form-label"></label>
-                            <input asp-for="NumberGuests" class="form-control" type="number" min="1" max="8" />
-                            <span asp-validation-for="NumberGuests" class="text-danger" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Status" class="form-label"></label>
-                            <select asp-for="Status" class="form-control">
-                                <option value="Confirmed">Confirmed</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Cancelled">Cancelled</option>
-                                <option value="Completed">Completed</option>
-                            </select>
-                            <span asp-validation-for="Status" class="text-danger" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end" aria-label="Form actions">
-                            <a asp-action="Index" class="btn btn-secondary me-2" role="button">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Create Booking</button>
-                        </div>
-                    </form>
+<section class="row justify-content-center mt-5 mb-5">
+    <div class="col-lg-8">
+        <div class="card rounded-3 p-4">
+            <form asp-action="Create" method="post" role="form">
+                <div class="card-header text-center bg-white">
+                    <h2 class="mb-2 custom-heading">Create New Booking</h2>
+                    <p class="text-muted mb-0">All new bookings will have <strong class="text-warning">Pending</strong> status until approved by an administrator</p>
                 </div>
-            </div>
+                <!-- Hide customer id field -->
+                <input type="hidden" asp-for="CustomerId" />
+
+                <!-- Booking Details Section -->
+                <div class="bg-light shadow-sm rounded-3 p-4 mb-4">
+                    <h5 class="mb-3 text-center">Booking Details</h5>
+                    <div class="row">
+                        <!-- Booking Date -->
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="BookingDate" class="form-label fw-bold">Booking Date</label>
+                                <input asp-for="BookingDate" class="form-control" type="date"
+                                        min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                                <span asp-validation-for="BookingDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <!-- Booking Time Slot -->
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="BookingTime" class="form-label fw-bold">Time Slot</label>
+                                <select asp-for="BookingTime" class="form-control" required>
+                                    <option value="">Select time...</option>
+                                    @foreach (var timeSlot in Model.AvailableTimeSlots)
+                                    {
+                                        <option value="@timeSlot.Value">@timeSlot.DisplayText</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="BookingTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <!-- Booking Guests -->
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="NumberGuests" class="form-label fw-bold">Number of Guests</label>
+                                <select asp-for="NumberGuests" class="form-control" required>
+                                    <option value="">Select guests...</option>
+                                    @for (int i = 1; i <= 8; i++)
+                                    {
+                                        <option value="@i">@i guest(s)</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="NumberGuests" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" name="action" value="checkAvailability" class="bg-success border-0 rounded-2 p-1 text-white">
+                            <i class="bi bi-search me-2"></i>Check Availability
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Selection (Display when table is available) -->
+                @if (Model.HasSearched && Model.AvailableTables.Any())
+                {
+                    <div class="bg-light rounded-3 shadow-sm p-4 mb-4">
+                        <h5 class="mb-3 text-center">Available Tables</h5>
+                        <div class="alert alert-success text-center">
+                            <strong>@Model.AvailableTables.Count</strong> table(s) available for @Model.BookingDate.ToString("MMM dd, yyyy") at @Model.BookingTime.ToString("HH:mm")-@Model.BookingTime.AddHours(2).ToString("HH:mm")
+                        </div>
+                        <!-- Select a Table -->
+                        <div class="mb-3">
+                            <label asp-for="TableId" class="form-label fw-bold">Select Table</label>
+                            <select asp-for="TableId" class="form-control" required>
+                                <option value="">Select a table...</option>
+                                @foreach (var table in Model.AvailableTables)
+                                {
+                                    <option value="@table.TableId">@table.DisplayText</option>
+                                }
+                            </select>
+                            <span asp-validation-for="TableId" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+                @if (Model.HasSearched && !Model.AvailableTables.Any())
+                {
+                    <div class="alert alert-warning text-center">
+                        <h5 class="p-1 text-center">No Available Tables</h5>
+                    </div>
+                }
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2 justify-content-center mt-4">
+                    <a asp-action="SelectCustomer" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>Cancel
+                    </a>
+                    @if (Model.AvailableTables.Any())
+                    {
+                        <button type="submit" name="action" value="create" class="btn btn-primary">
+                            Create Booking
+                        </button>
+                    }
+                </div>
+            </form>
         </div>
     </div>
-</main>
+</section>

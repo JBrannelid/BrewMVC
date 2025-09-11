@@ -1,18 +1,67 @@
 ﻿@using BrewMVC.ViewModel.MenuItems
 @model List<PopularMenuItemVM>
 
-<!-- Popular menu items carousel component -->
+<!-- Popular menu items carousel component (mobile) -->
 @* "false" = auto slide carousel off for better user control and WECAG friendly *@
-<section class="carousel slide" id="popularMenuItemsCarousel" data-bs-ride="false" aria-label="Popular menu items showcase">
+<section class="carousel slide d-md-none" id="popularMenuItemsCarouselMobile" data-bs-ride="false" aria-label="Popular menu items showcase">
+    <div class="carousel-inner" role="group" aria-label="Popular dishes slideshow">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <div class="carousel-item @(i == 0 ? "active" : "")">
+                <div class="row text-center justify-content-center">
+                    <div class="col-8">
+                        <!-- Individual popular menu item -->
+                        <article class="popular-menu-item">
+                            <figure class="mb-2">
+                                <img src="@Model[i].ImageUrl"
+                                     alt="Image of @Model[i].Description"
+                                     class="img-fluid rounded"
+                                     style="width:250px; height:250px; object-fit:cover;" />
+                                <figcaption class="fw-normal text-center mx-auto" style="max-width:300px;">
+                                    <p class="custom-p">@Model[i].Description</p>
+                                </figcaption>
+                            </figure>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Carousel navigation controls from Bootstrap with arie-labels -->
+    <div class="carousel-controls" aria-label="Carousel navigation">
+        @* Previous/Left Button *@    
+        <button class="carousel-control-prev custom-carousel-btn"
+                type="button"
+                data-bs-target="#popularMenuItemsCarouselMobile"
+                data-bs-slide="prev"
+                aria-label="View previous popular dishes">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+
+        @* Next/Right Button *@    
+        <button class="carousel-control-next custom-carousel-btn"
+                type="button"
+                data-bs-target="#popularMenuItemsCarouselMobile"
+                data-bs-slide="next"
+                aria-label="View next popular dishes">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
+
+<!-- Desktop -->
+<section class="carousel slide d-none d-md-block" id="popularMenuItemsCarousel" data-bs-ride="false" aria-label="Popular menu items showcase">
     <div class="carousel-inner" role="group" aria-label="Popular dishes slideshow">
         @for (int i = 0; i < Model.Count; i += 4)
         {
-            <div class="carousel-item @(i == 0 ? "active" : "")" >
+            <div class="carousel-item @(i == 0 ? "active" : "")">
                 <div class="row text-center justify-content-center">
                     @foreach (var menuItem in Model.Skip(i).Take(4))
                     {
                         <div class="col-md-2 mb-3">
-                            <!-- Individual popular menu item -->
                             <article class="popular-menu-item">
                                 <figure class="mb-2">
                                     <img src="@menuItem.ImageUrl"
@@ -30,8 +79,6 @@
             </div>
         }
     </div>
-
-    <!-- Carousel navigation controls from Bootstrap with arie-labels -->
     <div class="carousel-controls" aria-label="Carousel navigation">
         @* Previous/Left Button *@    
         <button class="carousel-control-prev custom-carousel-btn"
@@ -42,7 +89,6 @@
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-
         @* Next/Right Button *@    
         <button class="carousel-control-next custom-carousel-btn"
                 type="button"

@@ -4,22 +4,124 @@
     ViewData["Title"] = "Home";
 }
 
-<main class="container">
-    <header class="mb-4 mt-4">
-        <h1 class="custom-heading">
-            Our Most Loved Dishes
-        </h1>
-    </header>
-
-    <section aria-labelledby="popular-dishes-heading">
-        @* Using PartialAsync to render the popular menu carousel. Easier to work with collections *@
-        @await Html.PartialAsync("_PopularMenuCarousel", Model)
+<div class="container">
+    <!-- Our Story Section -->
+    <section class="my-5 py-5">
+        <div class="row align-items-center">
+            <article class="col-lg-6">
+                <h2 class="custom-heading mb-4">Our Story</h2>
+                <p class="custom-p">
+                    Our baristas are passionate about their craft and serve only top-quality coffee, 
+                    carefully selected and roasted by <strong>Johan & Nyström</strong>. 
+                    Pioneers in ethically sourced coffee. Every cup tells a story of fairness, 
+                    care, and a love for great flavor.
+                </p>
+                <p class="custom-p">
+                    Our food menu is simple, fresh, and thoughtful. We focus on seasonal ingredients and sustainable choices.
+                </p>
+                <p class="custom-p">
+                    We welcome walk-ins! 
+                    But if you want to be sure to get a seat, we recommend booking a table in advance.
+                </p>
+            </article>
+            <div class="col-lg-6 text-center">
+                <img src="/assets/images/Cafe.jpg"
+                     alt="Cozy café interior with warm lighting"
+                     class="img-fluid rounded shadow" />
+            </div>
+        </div>
     </section>
 
-    <!-- Navigation to full menu -->
-    <div class="mt-2 text-center" aria-label="Menu navigation">
-        <a asp-controller="MenuItem" asp-action="Index" class="btn" role="button">
-            Full Menu
-        </a>
-    </div>
-</main>
+    <!-- Popular Dishes Section -->
+    @if (Model?.Any() == true)
+    {
+        <section class="my-4 py-4 bg-white rounded-3">
+            <header class="mb-4 pt-3">
+                <h2 class="custom-heading">
+                    Our Most Loved Dishes
+                </h2>
+                <p class="text-center custom-p mb-4">Discover our best seling dishes that keep our guests coming back</p>
+            </header>
+
+            @* Render partial view of popular menu items *@
+            @await Html.PartialAsync("_PopularMenuCarousel", Model)
+            <div class="mt-4 text-center pb-3">
+                <a asp-controller="MenuItem" asp-action="Index" class="btn btn-lg" role="button">
+                    <i class="bi bi-arrow-right-circle me-2"></i>View Full Menu
+                </a>
+            </div>
+        </section>
+    }
+
+    <!-- Info Section -->
+    <section class="my-4 py-4 ">
+        <div class="row g-4 align-items-stretch">
+            <!-- Opening Hours -->
+            <div class="col-md-4">
+                <div class="text-center p-4 h-100 bg-white rounded-3">
+                    <i class="bi bi-clock text-warning fs-3 mb-3"></i>
+                    <h3 class="custom-h2 mb-3">Opening Hours</h3>
+                    <div class="custom-p">
+                        <p class="mb-2"><strong>Monday - Sunday</strong></p>
+                        <p>08:00 - 21:00</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Location -->
+            <div class="col-md-4">
+                <div class="text-center p-4 h-100 bg-white rounded-3">
+                    <i class="bi bi-geo-alt text-danger fs-3 mb-3"></i>
+                    <h3 class="custom-h2 mb-3">Find Us</h3>
+                    <div class="custom-p">
+                        <p class="mb-2">Street 110</p>
+                        <p class="mb-2">100 10, Stockholm</p>
+                        <p class="mb-3">Sweden</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Contact -->
+            <div class="col-md-4">
+                <div class="text-center p-4 h-100 bg-white rounded-3">
+                    <i class="bi bi-telephone text-success fs-3 mb-3"></i>
+                    <h3 class="custom-h2 mb-3">Contact</h3>
+                    <div class="custom-p">
+                        <p class="mb-2"><i class="bi bi-telephone-fill me-2"></i>+470 123 45 67</p>
+                        <p class="mb-2"><i class="bi bi-envelope-fill me-2"></i>contact@brewcafe.se</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Action Section -->
+    <section 
+        class="my-4 py-4 text-center rounded-3"
+             style="background: linear-gradient( to left, #613c19 0%, #080808 100%);">
+        <div class="text-white">
+            <h2 class="cafe-heading mb-3 fs-4"> What are you waiting for?</h2>
+            <p class="lead mb-4">Join us now for fair coffee, exceptional food and lovely desserts</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <!-- To Menu Item -->
+                <a asp-controller="MenuItem" asp-action="Index" 
+                    class="btn btn-lg px-4 py-2"
+                   style="background: transparent; border: none;">
+                    <i class="bi bi-cup-hot me-2"></i>Browse Menu
+                </a>
+                <!-- To Booking Reservation -->
+                <a asp-controller="Booking" asp-action="Index" 
+                    class="btn btn-lg px-4 py-2"
+                   style="background-color: transparent; border: 2px solid white; color: white;">
+                    <i class="bi bi-calendar-heart me-2"></i>Make Reservation
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Custom CSS hover effect -->
+<style>
+    .btn:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s ease;
+    }
+</style>

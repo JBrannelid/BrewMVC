@@ -1,0 +1,79 @@
+﻿@using BrewMVC.ViewModel.Bookings
+@model CustomerSelectionVM
+@{
+    ViewData["Title"] = "Select Customer";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<main class="container">
+    <!-- Header -->
+    <header class="mb-4 mt-4">
+        <h1 class="custom-heading">Select Customer for Booking</h1>
+        <p class="text-muted text-center">Search for an existing customer to create a booking</p>
+    </header>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-1">Search Customer</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Search field -->
+                    <form asp-action="SelectCustomer" method="post">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <input asp-for="SearchTerm" class="form-control" placeholder="Search by name, phone number or email" />
+                                <button type="submit" class="btn btn-outline-primary">Search</button>
+                            </div>
+                            <span asp-validation-for="SearchTerm" class="text-danger"></span>
+                            <!-- Need to implement customer controller and views -->
+                            @* <span>
+                                Create a
+                                <a asp-action="New-Customer" class="text-start">new customer</a>
+                            </span> *@
+                        </div>
+                    </form>
+                    <!-- Display available customer(s) -->
+                    @if (Model.AvailableCustomers.Any())
+                    {
+                        <div class="mt-4">
+                            <h6>Search Results:</h6>
+                            <div class="list-group">
+                                @foreach (var customer in Model.AvailableCustomers)
+                                {
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>@customer.Name</strong><br>
+                                            <small class="text-muted">@customer.PhoneNumber - @customer.Email</small>
+                                        </div>
+                                        <a asp-action="Create" asp-route-customerId="@customer.CustomerId"
+                                           class="btn btn-primary btn-sm">Select</a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    @* No customer found *@
+                    else if (!string.IsNullOrEmpty(Model.SearchTerm))
+                    {
+                        <div class="alert alert-info mt-3">
+                            <div class="mb-1">
+                                <span>No customers found matching: "<strong>@Model.SearchTerm</strong>"</span>
+                            </div>
+                            <div>
+                                <span>Search by Name, Number or Email</span>
+                            </div>                            
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- Back to Index -->
+            <div class="text-end mt-3">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back
+                </a>
+            </div>
+        </div>
+    </div>
+</main>

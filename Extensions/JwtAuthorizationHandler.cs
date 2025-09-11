@@ -1,9 +1,11 @@
-﻿using System.Net.Http.Headers;
-
-// DelegateHandler to add JWT token from cookie to outgoing HTTP requests
+﻿// DelegateHandler to add JWT token from cookie to outgoing HTTP requests
 // DelegateHandler works as middleware for HttpClient-levels/requests
 // This way we don't have to manually add the token in each controller method
 // ServiceExtensions.cs configures this handler for HttpClient "BrewAPI"
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Net;
 
 namespace BrewMVC.Extensions
 {
@@ -36,7 +38,19 @@ namespace BrewMVC.Extensions
             }
 
             // Continue with the request
-            return await base.SendAsync(request, cancellationToken);
+            var response = await base.SendAsync(request, cancellationToken);
+
+            // Handle 401 Unauthorized responses from API
+            if (response.StatusCode == HttpStatusCode.Unauthorized && httpContext != null)
+            {
+                if (httpContext.User?.Identity?.IsAuthenticated == true)
+                {
+                    await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    httpContext.Response.Cookies.Delete("jwtToken");
+                }
+            }
+
+            return response;
         }
     }
 }

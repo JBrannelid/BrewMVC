@@ -5,11 +5,13 @@ namespace BrewMVC.ViewModel.Auth
     public class LoginUserVM
     {
         [Required(ErrorMessage = "Emailadress is required")]
-        [EmailAddress(ErrorMessage = "Emailadress isn't valid")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        [Display(Name = "Email address")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
+        [Display(Name = "Password")]
         public string Password { get; set; }
     }
 }

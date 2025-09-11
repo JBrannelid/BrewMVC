@@ -59,5 +59,13 @@ namespace BrewMVC.Extensions
 
             return services;
         }
+
+        // Add JWT token validation middleware
+        public static IServiceCollection AddJwtTokenValidation(this IServiceCollection services)
+        {
+            services.AddTransient<BrewMVC.Middleware.JwtTokenValidationMiddleware>();
+
+            return services;
+        }
     }
 }

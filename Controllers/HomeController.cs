@@ -1,35 +1,34 @@
-using BrewMVC.Models;
 using BrewMVC.ViewModel.MenuItems;
-using BrewMVC.ViewModel.Shared;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+
+// Error handling: Helper methods for TempData.
+// ModelState is lost on redirect but TempData persists for one http reques
+// Same View() errors: ModelState since we return View()
+// Redirect errors: TempData since we return RedirectToAction()
 
 namespace BrewMVC.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly HttpClient _client;
 
-        public HomeController(ILogger<HomeController> logger, IHttpClientFactory clientFactory)
+        public HomeController(IHttpClientFactory clientFactory)
         {
             _client = clientFactory.CreateClient("BrewAPI");
-            _logger = logger;
         }
+
         public async Task<IActionResult> Index()
         {
             try
             {
-                // Use the dedicated popular endpoint for better performance
                 var popularMenuItems = await _client.GetFromJsonAsync<List<PopularMenuItemVM>>("MenuItems/popular")
                         ?? new List<PopularMenuItemVM>();
 
                 return View(popularMenuItems);
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError(key: "", $"An error occurred\"{ex.Message}");
+                ModelState.AddModelError("", "An error occurred while loading popular menu items");
                 return View(new List<PopularMenuItemVM>());
             }
         }
@@ -37,12 +36,6 @@ namespace BrewMVC.Controllers
         public IActionResult Privacy()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

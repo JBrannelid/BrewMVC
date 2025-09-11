@@ -1,39 +1,36 @@
 ﻿@model BrewMVC.ViewModel.Tabels.CreateTableVM
 @{
     ViewData["Title"] = "Create New Table";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<main class="container">
-    <header class="mb-4 mt-4">
-        <h1 class="custom-heading">Create New Table</h1>
-    </header>
-
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <form asp-action="Create" method="post" role="form" aria-labelledby="create-table-heading">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                        <div class="mb-3">
-                            <label asp-for="TableNumber" class="form-label"></label>
-                            <input asp-for="TableNumber" class="form-control" aria-describedby="table-number-help" />
-                            <span asp-validation-for="TableNumber" class="text-danger" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Capacity" class="form-label"></label>
-                            <input asp-for="Capacity" class="form-control" aria-describedby="capacity-help" />
-                            <span asp-validation-for="Capacity" class="text-danger" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end" aria-label="Form actions">
-                            <a asp-action="Index" class="btn btn-secondary me-2" role="button">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Create Table</button>
-                        </div>
-                    </form>
+<section class="row justify-content-center mt-5 mb-5">
+    <div class="col-lg-5">
+        <div class="card rounded-3 p-4">
+            <form asp-action="Create" method="post" role="form" aria-labelledby="create-table-heading">
+                <div class="card-header text-center bg-white">
+                    <h2 class="mb-0 custom-heading">Create New Table</h2>
                 </div>
-            </div>
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="TableNumber" class="form-label fw-bold"></label>
+                    <input asp-for="TableNumber" class="form-control" aria-describedby="table-number-help" />
+                    <span asp-validation-for="TableNumber" class="text-danger" role="alert" aria-live="polite"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Capacity" class="form-label fw-bold"></label>
+                    <input asp-for="Capacity" class="form-control" aria-describedby="capacity-help" />
+                    <span asp-validation-for="Capacity" class="text-danger" role="alert" aria-live="polite"></span>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-center mt-4">
+                    <a asp-action="Index" class="btn btn-secondary" role="button">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Table</button>
+                </div>
+            </form>
         </div>
     </div>
-</main>
+</section>

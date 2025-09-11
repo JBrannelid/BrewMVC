@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -19,12 +19,19 @@ html {
 
 body {
     margin-bottom: 60px;
-    background-color: #e3e0d8
+    background-color: #edeae1
 }
 
 /* Background Header */
 .main-header {
-    background-color: #aa866e;
+    position: relative;
+    /* Black shadow gradient */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/assets/images/BgHeaderImg.jpg');
+    min-height: 50vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
 }
 
 .table-custom-header {
@@ -34,56 +41,136 @@ body {
 
 /* Text */
 .custom-heading {
-    color: #787064;
+    color: #4f2203;
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     text-align: center;
     font-size: 2em;
 }
 
+.cafe-heading {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    color: white;
+}
+
+
 .custom-h2 {
-    color: #787064;
+    color: #4f2203;
     font-family: 'Playfair Display', serif;
     font-weight: 600;
     text-align: center;
     font-size: 1.5em;
 }
 
+.custom-h3 {
+    color: #4f2203;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.3em;
+}
+
 .custom-p {
-    color: #787064;
+    color: #4f2203;
     font-size: 1em;
+    line-height: 1.6;
 }
 
 /* Buttons */
 .custom-carousel-btn {
     width: 40px;
     height: 40px;
-    background-color: #d1bba9; 
+    background-color: #17181c;
     border-radius: 50%;
     top: 40%;
     transform: translateY(-40%);
 }
     .custom-carousel-btn:hover,
     .custom-carousel-btn:focus {
-        background-color: #bfa28b;
+        background-color: #17181c;
+    }
+    .custom-carousel-btn.carousel-control-prev {
+        left: 2%; 
     }
 
+    .custom-carousel-btn.carousel-control-next {
+        right: 2%; 
+    }
+
+
 .btn {
-    background-color: #d1bba9;
-    border-color: #d1bba9;
+    background-color: #613c19;
+    border-color: #613c19;
     border-radius: 10px;
     color: white;
 }
-    /* Change Bootstrap default primary color */
+/* Change Bootstrap default primary color */
     .btn:hover,
     .btn:focus {
-        background-color: #AA866E;
-        border-color: #AA866E;
+        background-color: #613c19;
+        border-color: #613c19;
         color: white;
     }
-    /* Remove focus/active outline */
     .btn:focus,
     .btn:active:focus {
         outline: none;
         box-shadow: none;
     }
+/* Edit button */
+.btn-edit {
+    background-color: transparent;
+    border: none;
+    padding: 0.25rem 0.6rem;
+    font-size: 1.5rem;
+    color: #1936F7;
+}
+
+/* Delete button */
+.btn-delete {
+    background-color: transparent;
+    border: none;
+    padding: 0.25rem 0.6rem;
+    font-size: 1.5rem; 
+    color: #E62A2A;
+}
+
+/* User button */
+.btn-user {
+    background-color: transparent;
+    border: none;
+    padding: 0.25rem 0.6rem;
+    font-size: 2rem;
+    color: white;
+}
+    .btn-user:hover,
+    .btn-user:focus {
+        background-color: transparent;
+        border: none;
+        color: white;
+    }
+/* Explore menu button */
+.btn-explore-menu {
+    background-color: #050607;
+    border: none;
+    color: white;
+}
+    .btn-explore-menu:hover,
+    .btn-explore-menu:focus {
+        background-color: #050607;
+    }
+
+/* Alert Banner */
+.alert {
+    border-radius: 10px;
+    position: relative;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.alert.fade.show {
+    opacity: 1;
+    transform: translateY(0);
+}

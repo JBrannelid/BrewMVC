@@ -29,6 +29,7 @@ namespace BrewMVC
 
             // Enable Authentication & Authorization
             app.UseAuthentication();
+            app.UseMiddleware<BrewMVC.Middleware.JwtTokenValidationMiddleware>();
             app.UseAuthorization();
 
             // Configure routing

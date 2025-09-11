@@ -1,62 +1,122 @@
 ﻿@model List<BrewMVC.ViewModel.Tabels.AdminTableVM>
-
 @{
     ViewData["Title"] = "Table administration";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<main class="container mt-4">
-    <header class="d-flex justify-content-between align-items-center mb-4 mt-4">
-        <h1 class="custom-heading mb-0">Administrate Tables</h1>
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i>Create New Table
-        </a>
+<div class="container mt-4">
+    <!-- Header Section -->
+    <header class="my-4 py-4 text-center bg-white rounded-3 shadow-sm">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="custom-heading mb-3">Table Administration</h1>
+                <p class="custom-p text-muted mb-4">
+                    Manage your café tables
+                </p>
+            </div>
+        </div>
     </header>
 
-    <section aria-labelledby="menu-items-heading">
-
+    <!-- Tables Section -->
+    <section>
         @if (Model?.Any() == true)
         {
-            <div class="table-responsive">
-                <table class="table table-hover table-striped align-middle"
-                       aria-label="Table administration table">
-                    <thead class="table-custom-header text-white table-borderless">
-                        <tr>
-                            <th>Table Number</th>
-                            <th>Capacity</th>
-                            @* Blank space for header *@
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var table in Model)
-                        {
-                            <tr>
-                                <td><strong>Table @table.TableNumber</strong></td>
-                                <td>@table.Capacity guests</td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@table.TableId" class="btn btn-warning btn-sm me-2">
-                                        <i class="bi bi-pencil-square me-1"></i>Edit
-                                    </a>
-                                    <form asp-action="Delete" method="post" class="d-inline"
-                                            onsubmit="return confirm('Are you sure you want to delete Table @table.TableNumber?')">
-                                        <input type="hidden" name="tableId" value="@table.TableId" />
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="bi bi-trash me-1"></i>Delete
+            <!-- Stats and action Section -->
+            <div class="my-4 py-4 bg-white rounded-3 shadow-sm">
+                <div class="px-4">
+                    <div class="d-flex justify-content-around text-center flex-wrap gap-2">
+                        <!-- Total Tables-->
+                        <div class="flex-fill">
+                            <div class="p-3">
+                                <i class="bi bi-table text-primary fs-3 mb-2"></i>
+                                <h3 class="custom-h2 mb-1">@Model.Count</h3>
+                                <p class="custom-p text-muted mb-0">Total Tables</p>
+                            </div>
+                        </div>
+                        <!-- Total Seats-->
+                        <div class="flex-fill">
+                            <div class="p-3">
+                                <i class="bi bi-people text-success fs-3 mb-2"></i>
+                                <h3 class="custom-h2 mb-1">@Model.Sum(t => t.Capacity)</h3>
+                                <p class="custom-p text-muted mb-0">Total Seats</p>
+                            </div>
+                        </div>
+                        <!-- Create new table-->
+                        <div class="flex-fill">
+                            <a asp-action="Create" class="text-decoration-none">
+                                <div class="p-3">
+                                    <i class="bi bi-plus-square text-primary fs-3 mb-2"></i>
+                                    <h3 class="custom-h2 mb-1">&nbsp;</h3>
+                                    <p class="custom-p text-muted mb-0">Create New Table</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tables Section -->
+            <div class="row g-2">
+                @foreach (var table in Model.OrderBy(t => t.TableNumber))
+                {
+                    <div class="col-md-4 col-lg-3">
+                        <article class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h3 class="custom-h3 mb-1">Table @table.TableNumber</h3>
+                                        <div class="d-flex align-items-center text-muted">
+                                            <i class="bi bi-people me-2"></i>
+                                            <span class="custom-p mb-0">@table.Capacity guests</span>
+                                        </div>
+                                    </div>
+                                    <!-- Dropdown Menu Edit/Delet -->
+                                    <div class="dropdown">
+                                        <button class="border-0 bg-transparent text-muted"
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                                title="Table options">
+                                            <i class="bi bi-three-dots fs-5"></i>
                                         </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   asp-action="Edit"
+                                                   asp-route-id="@table.TableId"
+                                                   title="Edit Table @table.TableNumber">
+                                                    <i class="bi bi-pencil-square me-2"></i>Edit Table
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <form asp-action="Delete"
+                                                      method="post"
+                                                      class="d-inline"
+                                                      onsubmit="return confirm('Are you sure you want to delete Table @table.TableNumber?')">
+                                                    <input type="hidden" name="tableId" value="@table.TableId" />
+                                                    <button type="submit"
+                                                            class="dropdown-item text-danger"
+                                                            title="Delete Table @table.TableNumber">
+                                                        <i class="bi bi-trash me-2"></i>Delete Table
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                }
             </div>
         }
         else
         {
             <div class="alert alert-primary" role="alert">
                 <h4>No Tables were found</h4>
-                <p>There are currently no Tables in the system.</p>
+                <p>There are currently no Tabels in the system</p>
             </div>
         }
     </section>
-</main>
+</div>

@@ -5,26 +5,33 @@
     ViewData["Title"] = "Login";
 }
 
-<main>
-    <section class="d-flex justify-content-center align-items-center" style="margin-top: 6rem;">
-        <div class="card p-4 shadow w-50">
-            <form asp-action="Login" method="post" novalidate>
-                    <h2 class="card-title text-center mb-3 custom-heading">Login</h2>
+<section class="row justify-content-center mt-5 mb-5">
+    <div class="col-lg-5">
+        <div class="card rounded-3 p-4">
+            <form asp-action="Login" method="post">
+                <div class="card-header text-center bg-white">
+                    <h2 class="mb-0 custom-heading">Login</h2>
+                </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Email" class="form-label fw-bold"></label>
-                        <input asp-for="Email" class="form-control @(ViewData.ModelState["Email"]?.Errors.Count > 0 ? "is-invalid" : "")" />
-                        <span asp-validation-for="Email" class="invalid-feedback"></span>
-                    </div>
+                <!-- Email -->
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label fw-bold"></label>
+                    <input asp-for="Email" autocomplete="email" class="form-control" aria-describedby="email-feedback" />
+                    <span asp-validation-for="Email" class="text-danger" id="email-feedback" aria-live="polite"></span>
+                </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Password" class="form-label fw-bold"></label>
-                        <input asp-for="Password" type="password" class="form-control @(ViewData.ModelState["Password"]?.Errors.Count > 0 ? "is-invalid" : "")" />
-                        <span asp-validation-for="Password" class="invalid-feedback"></span>
-                    </div>
+                <!-- Password -->
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label fw-bold"></label>
+                    <input asp-for="Password" autocomplete="current-password" type="password" class="form-control" aria-describedby="password-feedback" />
+                    <span asp-validation-for="Password" class="text-danger" id="password-feedback" aria-live="polite"></span>
+                </div>
 
-                    <button type="submit" class="btn btn-primary w-50 d-block mx-auto">Login</button>
+                <!-- Action Btn -->
+                <button type="submit" class="btn btn-primary w-50 d-block mx-auto" aria-label="Login in as user">
+                    Login
+                </button>
             </form>
         </div>
-    </section>
-</main>
+    </div>
+</section>

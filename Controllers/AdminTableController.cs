@@ -2,10 +2,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+// Error handling: Helper methods for TempData.
+// ModelState is lost on redirect but TempData persists for one http reques
+// Same View() errors: ModelState since we return View()
+// Redirect errors: TempData since we return RedirectToAction()
+
 namespace BrewMVC.Controllers
 {
     [Authorize]
-    public class AdminTableController : Controller
+    public class AdminTableController : BaseController
     {
         private readonly HttpClient _client;
 
@@ -19,6 +24,13 @@ namespace BrewMVC.Controllers
             try
             {
                 var response = await _client.GetAsync("Tables");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    HandleApiError(response, "Failed to load tables");
+                    return View(new List<AdminTableVM>());
+                }
+
                 // Deserialize JSON into a list of Tabels - fallback to empty list if null
                 var adminTables = await response.Content.ReadFromJsonAsync<List<AdminTableVM>>()
                                   ?? new List<AdminTableVM>();
@@ -28,7 +40,7 @@ namespace BrewMVC.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(key: "", $"An error occurred\"{ex.Message}");
+                ModelState.AddModelError("", "An error occurred while loading tables");
                 return View(model: new List<AdminTableVM>());
             }
         }
@@ -52,15 +64,17 @@ namespace BrewMVC.Controllers
                 var response = await _client.PostAsJsonAsync("Tables", newTable);
                 if (!response.IsSuccessStatusCode)
                 {
-                    ModelState.AddModelError("", "Failed to create table");
+                    HandleApiError(response, "Failed to create table");
                     return View(newTable);
                 }
+
+                SetSuccessMessage("Table created successfully");
                 return RedirectToAction("Index");
 
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(key: "", $"An error occurred\"{ex.Message}");
+                ModelState.AddModelError("", "An error occurred while creating the table");
                 return View(newTable);
             }
         }
@@ -73,20 +87,23 @@ namespace BrewMVC.Controllers
                 var response = await _client.GetAsync($"Tables/{id}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    return NotFound();
+                    HandleApiErrorWithTempData(response, "Table not found");
+                    return RedirectToAction("Index");
                 }
+
                 var tableContent = await response.Content.ReadFromJsonAsync<EditTableVM>();
                 if (tableContent == null)
                 {
-                    return NotFound();
+                    SetErrorMessage("Table not found");
+                    return RedirectToAction("Index");
                 }
 
                 return View(tableContent);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"An error occurred\"{ex.Message}");
-                return NotFound();
+                SetErrorMessage("An error occurred while loading the table");
+                return RedirectToAction(actionName: "Index");
             }
         }
 
@@ -103,15 +120,16 @@ namespace BrewMVC.Controllers
                 var response = await _client.PutAsJsonAsync($"Tables/{editTable.TableId}", editTable);
                 if (!response.IsSuccessStatusCode)
                 {
-                    ModelState.AddModelError("", "Failed to update menu item");
+                    HandleApiError(response, "Failed to update table");
                     return View(editTable);
                 }
 
+                SetSuccessMessage("Table updated successfully");
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(key: "", $"An error occurred: {ex.Message}");
+                ModelState.AddModelError("", "An error occurred while updating the table");
                 return View(editTable);
             }
         }
@@ -119,24 +137,21 @@ namespace BrewMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int tableId)
         {
-            // TempData for errors on Delete since we redirect to Index
-            // ModelState is lost on redirect but TempData persists for one reques
-
             try
             {
                 var response = await _client.DeleteAsync($"Tables/{tableId}");
 
                 if (!response.IsSuccessStatusCode) 
                 {
-                    TempData["ErrorMessage"] = "Failed to delete table";
+                    HandleApiErrorWithTempData(response, "Failed to delete table");
                     return RedirectToAction("Index");
                 }
 
-                TempData["SuccessMessage"] = "Table deleted successfully";
+                SetSuccessMessage("Table deleted successfully");
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                SetErrorMessage("An error occurred while deleting the table");
             }
 
             return RedirectToAction("Index");

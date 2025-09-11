@@ -1,43 +1,39 @@
 ﻿@model BrewMVC.ViewModel.Tabels.EditTableVM
 @{
     ViewData["Title"] = "Edit Table";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<main class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <article class="card mt-4">
-                <header class="card-header">
-                    <h1 class="custom-heading mb-0">Edit Table @Model.TableNumber</h1>
-                </header>
-                <section class="card-body">
-                    <form asp-action="Edit" method="post" aria-labelledby="edit-table-heading">
-                        <input type="hidden" asp-for="TableId" />
 
-                        <div class="mb-3">
-                            <label asp-for="TableNumber" class="form-label"></label>
-                            <input asp-for="TableNumber" class="form-control" aria-describedby="tableNumber-help" />
-                            <span asp-validation-for="TableNumber" class="text-danger"></span>
-                        </div>
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-lg-5">
+        <div class="card rounded-3 p-4">
+            <div class="card-header text-center bg-white">
+                <h2 class="text-center mb-3 custom-h2">Edit Table:<strong>&nbsp; #@Model.TableNumber</strong></h2>
+            </div>
+            <section class="card-body">
+                <form asp-action="Edit" method="post">
+                    <!-- No reason to display/edit table Nr or Id -->
+                    <input type="hidden" asp-for="TableId" />
+                    <input type="hidden" asp-for="TableNumber" />
 
-                        <div class="mb-3">
-                            <label asp-for="Capacity" class="form-label"></label>
-                            <input asp-for="Capacity" class="form-control" type="number" min="1" max="8" aria-describedby="capacity-help" />
-                            <span asp-validation-for="Capacity" class="text-danger"></span>
-                        </div>
+                    <div class="mb-3">
+                        <label asp-for="Capacity" class="form-label"></label>
+                        <input asp-for="Capacity" class="form-control" type="number" min="1" max="8" aria-describedby="capacity-feedback" />
+                        <span asp-validation-for="Capacity" class="text-danger" id="capacity-feedback"></span>
+                    </div>
 
-                        <div class="d-flex justify-content-between">
-                            <a asp-action="Index" class="btn btn-secondary" aria-label="Return to tables list">
-                                <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Tables
-                            </a>
-                            <button type="submit" class="btn btn-primary" aria-label="Save changes to table @Model.TableNumber">
-                                <i class="bi bi-check-circle me-1" aria-hidden="true"></i>Update Table
-                            </button>
-                        </div>
-                    </form>
-                </section>
-            </article>
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn" aria-label="Return to tables list">
+                            <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back
+                        </a>
+                        <button type="submit" class="btn" aria-label="Save changes to table @Model.TableNumber">
+                            Update
+                        </button>
+                    </div>
+                </form>
+            </section>
         </div>
     </div>
-</main>
+</div>
 
