@@ -1,25 +1,16 @@
 ﻿html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 body {
     margin-bottom: 60px;
-    background-color: #edeae1
+    background-color: #edeae1;
 }
 
 /* Background Header */
@@ -31,15 +22,30 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    overflow: hidden;
 }
+
+/* Navbar fixes */
+.navbar {
+    z-index: 30;
+    position: relative;
+}
+
+.navbar-toggler {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 50;
+    position: relative;
+}
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+    }
 
 .table-custom-header {
     background-color: #9c9990;
     color: white;
 }
 
-/* Text */
+/* Text Styles */
 .custom-heading {
     color: #4f2203;
     font-family: 'Playfair Display', serif;
@@ -53,7 +59,6 @@ body {
     font-size: 2rem;
     color: white;
 }
-
 
 .custom-h2 {
     color: #4f2203;
@@ -85,19 +90,21 @@ body {
     border-radius: 50%;
     top: 40%;
     transform: translateY(-40%);
+    z-index: 1020;
 }
+
     .custom-carousel-btn:hover,
     .custom-carousel-btn:focus {
         background-color: #17181c;
     }
+
     .custom-carousel-btn.carousel-control-prev {
-        left: 2%; 
+        left: 2%;
     }
 
     .custom-carousel-btn.carousel-control-next {
-        right: 2%; 
+        right: 2%;
     }
-
 
 .btn {
     background-color: #613c19;
@@ -105,19 +112,21 @@ body {
     border-radius: 10px;
     color: white;
 }
-/* Change Bootstrap default primary color */
+    /* Change Bootstrap default primary color */
     .btn:hover,
     .btn:focus {
         background-color: #613c19;
         border-color: #613c19;
         color: white;
     }
+
     .btn:focus,
     .btn:active:focus {
         outline: none;
         box-shadow: none;
     }
-/* Edit button */
+
+/* Actions Buttons */
 .btn-edit {
     background-color: transparent;
     border: none;
@@ -126,16 +135,14 @@ body {
     color: #1936F7;
 }
 
-/* Delete button */
 .btn-delete {
     background-color: transparent;
     border: none;
     padding: 0.25rem 0.6rem;
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
     color: #E62A2A;
 }
 
-/* User button */
 .btn-user {
     background-color: transparent;
     border: none;
@@ -143,18 +150,20 @@ body {
     font-size: 2rem;
     color: white;
 }
+
     .btn-user:hover,
     .btn-user:focus {
         background-color: transparent;
         border: none;
         color: white;
     }
-/* Explore menu button */
+
 .btn-explore-menu {
     background-color: #050607;
     border: none;
     color: white;
 }
+
     .btn-explore-menu:hover,
     .btn-explore-menu:focus {
         background-color: #050607;
@@ -170,7 +179,95 @@ body {
     transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
-.alert.fade.show {
-    opacity: 1;
-    transform: translateY(0);
+    .alert.fade.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+/* Media CSS */
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        min-height: 40vh;
+    }
+
+    .cafe-heading {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .main-header {
+        min-height: 35vh;
+    }
+
+    .cafe-heading {
+        font-size: 2rem;
+    }
+}
+
+/* Mobile hamburger menu */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        position: fixed;
+        top: 0;
+        right: 100%;
+        width: 250px;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.90) !important;
+        backdrop-filter: blur(10px);
+        z-index: 40;
+        transition: right 0.3s ease-in-out;
+        overflow-y: auto;
+        padding: 2rem 1rem;
+    }
+
+        .navbar-collapse.show {
+            right: 0;
+        }
+
+        .navbar-collapse.collapsing {
+            right: -100%;
+            transition: right 0.3s ease-in-out;
+        }
+
+        /* Vertical menu */
+        .navbar-collapse .navbar-nav {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .navbar-collapse .nav-item {
+            width: 100%;
+            margin: 0.5rem 0 !important;
+        }
+
+        .navbar-collapse .nav-link {
+            padding: 0.75rem 1rem;
+            border-radius: 0.2rem;
+        }
+
+        /* Dropdown mobile */
+        .navbar-collapse .dropdown-menu {
+            position: static;
+            float: none;
+            margin-top: 0.5rem;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .navbar-collapse .dropdown-item:hover,
+        .navbar-collapse .dropdown-item:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .navbar-collapse .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 1.1rem 1.5rem;
+        }
 }
