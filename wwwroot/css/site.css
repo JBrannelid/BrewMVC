@@ -24,6 +24,11 @@ body {
     background-position: center;
 }
 
+/* Custom view hight for Admin pages */
+.admin-header {
+    min-height: 25vh !important;
+}
+
 /* Navbar fixes */
 .navbar {
     z-index: 30;
