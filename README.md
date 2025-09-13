@@ -1,4 +1,4 @@
-﻿![BrewMVC Homepage](./wwwroot/images/README_Img.png)
+﻿![BrewMVC Homepage](./wwwroot/assets/images/README_Img.png)
 
 # ☕ BrewMVC - Café Website & Administration Portal
 
