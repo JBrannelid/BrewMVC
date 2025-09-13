@@ -2,6 +2,7 @@
 @model List<PopularMenuItemVM>
 @{
     ViewData["Title"] = "Home";
+    @inject IConfiguration Configuration
 }
 
 <div class="container">
@@ -108,9 +109,11 @@
                     <i class="bi bi-cup-hot me-2"></i>Browse Menu
                 </a>
                 <!-- To Booking Reservation -->
-                <a asp-controller="Booking" asp-action="Index" 
-                    class="btn btn-lg px-4 py-2"
-                   style="background-color: transparent; border: 2px solid white; color: white;">
+                <a href="@Configuration["ExternalUrls:BookingApp"]"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="btn btn-lg px-4 py-2"
+                   style="background-color: transparent; border: 2px solid white; color: white; text-decoration: none;">
                     <i class="bi bi-calendar-heart me-2"></i>Make Reservation
                 </a>
             </div>

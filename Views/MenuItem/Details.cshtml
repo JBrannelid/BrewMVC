@@ -1,6 +1,8 @@
 ﻿@model BrewMVC.Models.MenuItemModel
 @{
     ViewData["Title"] = Model.Name;
+    @inject IConfiguration Configuration
+
 }
 
 <div class="container">
@@ -39,7 +41,10 @@
 
                             <!-- Action Btn -->
                             <div class="d-flex gap-2">
-                                <a asp-controller="Booking" asp-action="Index" class="btn ">
+                                <a href="@Configuration["ExternalUrls:BookingApp"]" 
+                                   target="_blank"
+                                   rel="noopener noreferrer" 
+                                   class="btn ">
                                     <i class="bi bi-calendar-check me-2"></i>Book a Table
                                 </a>
                                 <a asp-controller="MenuItem" asp-action="Index" class="btn ">
